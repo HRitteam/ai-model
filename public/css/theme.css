@@ -1,0 +1,55 @@
+/* ========== 军工雷达风格主题变量 ========== */
+:root {
+  --bg: #0a0e1a;
+  --bg-card: #0f1626;
+  --bg-panel: rgba(15, 22, 38, 0.88);
+  --cyan: #00d4ff;
+  --cyan-dim: rgba(0, 212, 255, 0.3);
+  --green: #00ff88;
+  --yellow: #ffcc00;
+  --red: #ff3366;
+  --text: #e0f7ff;
+  --text-dim: #7a8fa6;
+  --text-muted: #5a7a9a;
+  --border: rgba(0, 212, 255, 0.25);
+  --border-bright: rgba(0, 212, 255, 0.5);
+  --grid-line: rgba(0, 212, 255, 0.05);
+  --font-mono: 'Share Tech Mono', 'Consolas', 'Courier New', monospace;
+  --font-sans: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+/* 全局网格背景 */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 42px 42px;
+  animation: gridMove 30s linear infinite;
+}
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 42px 42px; }
+}
+
+/* 扫描线 */
+.scanline {
+  position: fixed; left: 0; right: 0; height: 140px; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 212, 255, 0.06) 45%, rgba(0, 212, 255, 0.1) 50%, rgba(0, 212, 255, 0.06) 55%, transparent 100%);
+  animation: scan 7s linear infinite;
+}
+@keyframes scan {
+  0% { top: -140px; }
+  100% { top: 100vh; }
+}
+
+/* 数字等宽 */
+.mono { font-family: var(--font-mono); }

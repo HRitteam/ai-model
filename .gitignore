@@ -1,0 +1,10 @@
+node_modules/
+.env
+*.log
+logs/
+.DS_Store
+.vscode/
+.idea/
+preview.png
+demo-seed.js
+shot.js

@@ -1,0 +1,122 @@
+/* ========== 顶部状态栏 ========== */
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-icon { font-size: 30px; filter: drop-shadow(0 0 8px var(--cyan)); animation: glow 2s infinite alternate; }
+@keyframes glow { 0%{opacity:0.7;} 100%{opacity:1;} }
+.brand-text h1 { font-size: 18px; color: var(--cyan); letter-spacing: 2px; font-weight: 600; }
+.brand-text p { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 1px; }
+
+.status-center { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.sys-status { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.status-dot.dot-normal { background: var(--green); box-shadow: 0 0 10px var(--green); animation: pulse 2s infinite; }
+.status-dot.dot-yellow { background: var(--yellow); box-shadow: 0 0 10px var(--yellow); animation: pulse 1.5s infinite; }
+.status-dot.dot-red { background: var(--red); box-shadow: 0 0 12px var(--red); animation: pulse 0.7s infinite; }
+.status-dot.dot-gray { background: var(--text-muted); }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+.collect-info { font-size: 11px; color: var(--text-dim); display: flex; gap: 16px; }
+.collect-info b { color: var(--cyan); font-family: var(--font-mono); }
+
+.actions { display: flex; align-items: center; gap: 10px; }
+.summary-chips { display: flex; gap: 6px; }
+.chip { font-size: 11px; padding: 3px 8px; border-radius: 3px; border: 1px solid; font-family: var(--font-mono); }
+.chip b { font-size: 13px; }
+.chip-ok { color: var(--green); border-color: rgba(0,255,136,0.4); background: rgba(0,255,136,0.08); }
+.chip-warn { color: var(--yellow); border-color: rgba(255,204,0,0.4); background: rgba(255,204,0,0.08); }
+.chip-danger { color: var(--red); border-color: rgba(255,51,102,0.4); background: rgba(255,51,102,0.08); }
+
+/* ========== 按钮 ========== */
+.btn { padding: 7px 14px; font-size: 12px; border-radius: 3px; letter-spacing: 0.5px; transition: all 0.2s; white-space: nowrap; }
+.btn-cyan { background: var(--cyan); color: #001529; font-weight: 600; }
+.btn-cyan:hover { box-shadow: 0 0 14px var(--cyan); }
+.btn-cyan:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-outline { border: 1px solid var(--border-bright); color: var(--cyan); }
+.btn-outline:hover { background: rgba(0,212,255,0.1); box-shadow: 0 0 10px rgba(0,212,255,0.3); }
+
+/* ========== 六宫格卡片 ========== */
+.grid-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px;
+  flex: 1; min-height: 0;
+  display: flex; flex-direction: column;
+  transition: all 0.3s;
+  overflow: hidden;
+}
+.grid-card::before, .grid-card::after {
+  content: ''; position: absolute; width: 10px; height: 10px;
+  border: solid var(--cyan); border-width: 0;
+}
+.grid-card::before { top: -1px; left: -1px; border-top-width: 2px; border-left-width: 2px; }
+.grid-card::after { bottom: -1px; right: -1px; border-bottom-width: 2px; border-right-width: 2px; }
+.grid-card:hover { transform: translateY(-2px); border-color: var(--border-bright); box-shadow: 0 4px 20px rgba(0,212,255,0.12); }
+
+.grid-card.level-normal { border-color: rgba(0,255,136,0.4); }
+.grid-card.level-normal::before, .grid-card.level-normal::after { border-color: var(--green); }
+.grid-card.level-yellow { border-color: rgba(255,204,0,0.5); }
+.grid-card.level-yellow::before, .grid-card.level-yellow::after { border-color: var(--yellow); }
+.grid-card.level-red { border-color: rgba(255,51,102,0.6); box-shadow: 0 0 18px rgba(255,51,102,0.15); }
+.grid-card.level-red::before, .grid-card.level-red::after { border-color: var(--red); }
+.grid-card.level-unknown { border-color: var(--border); }
+
+.card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.card-name { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+.card-name .picon { width: 26px; height: 26px; border-radius: 4px; background: rgba(0,212,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: var(--font-mono); color: var(--cyan); border: 1px solid var(--border); }
+.card-badge { font-size: 10px; padding: 2px 6px; border-radius: 2px; font-family: var(--font-mono); }
+.badge-ok { color: var(--green); background: rgba(0,255,136,0.1); }
+.badge-warn { color: var(--yellow); background: rgba(255,204,0,0.1); }
+.badge-danger { color: var(--red); background: rgba(255,51,102,0.1); }
+.badge-gray { color: var(--text-muted); background: rgba(122,143,166,0.1); }
+
+.card-balance { display: flex; align-items: baseline; gap: 4px; margin: 6px 0; }
+.balance-num { font-family: var(--font-mono); font-size: 30px; font-weight: 700; line-height: 1; }
+.balance-num.t-normal { color: var(--green); }
+.balance-num.t-yellow { color: var(--yellow); }
+.balance-num.t-red { color: var(--red); }
+.balance-num.t-unknown { color: var(--text-dim); }
+.balance-unit { font-size: 12px; color: var(--text-dim); }
+
+.card-spark { height: 28px; margin: 4px 0; }
+.card-foot { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-muted); margin-top: auto; }
+.card-foot .err { color: var(--red); }
+
+/* ========== 告警滚动条 ========== */
+.ticker-label { padding: 0 14px; font-size: 12px; color: var(--yellow); border-right: 1px solid var(--border); height: 100%; display: flex; align-items: center; white-space: nowrap; }
+.ticker-track { display: flex; align-items: center; gap: 30px; padding-left: 20px; white-space: nowrap; animation: ticker 40s linear infinite; }
+.ticker-track:hover { animation-play-state: paused; }
+@keyframes ticker { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+.ticker-item { font-size: 12px; color: var(--text-dim); }
+.ticker-item .t-red { color: var(--red); }
+.ticker-item .t-yellow { color: var(--yellow); }
+.ticker-item .t-time { color: var(--text-muted); font-family: var(--font-mono); margin-right: 6px; }
+
+/* ========== Tabs ========== */
+.tabs { display: flex; gap: 4px; }
+.tab { font-size: 11px; padding: 3px 10px; border: 1px solid var(--border); border-radius: 2px; color: var(--text-dim); }
+.tab.active { color: var(--cyan); border-color: var(--cyan); background: rgba(0,212,255,0.1); }
+
+/* ========== 弹窗 ========== */
+.modal-mask { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+.modal { width: 380px; background: var(--bg-card); border: 1px solid var(--border-bright); border-radius: 6px; box-shadow: 0 0 40px rgba(0,212,255,0.2); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.modal-header h3 { color: var(--cyan); font-size: 15px; }
+.modal-close { color: var(--text-dim); font-size: 16px; }
+.modal-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.form-row { display: flex; align-items: center; gap: 12px; }
+.form-row label { width: 70px; font-size: 13px; color: var(--text-dim); }
+.form-row select { flex: 1; padding: 7px 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 3px; color: var(--text); font-size: 13px; }
+.modal-footer { padding: 14px 18px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+.modal-result { padding: 0 18px 14px; font-size: 12px; }
+.modal-result .r-ok { color: var(--green); }
+.modal-result .r-fail { color: var(--red); }
+
+/* ========== Toast ========== */
+.toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 200; padding: 10px 24px; background: var(--bg-card); border: 1px solid var(--cyan); border-radius: 4px; color: var(--cyan); font-size: 13px; box-shadow: 0 0 20px rgba(0,212,255,0.3); animation: toastIn 0.3s; }
+.toast.err { border-color: var(--red); color: var(--red); box-shadow: 0 0 20px rgba(255,51,102,0.3); }
+@keyframes toastIn { 0%{opacity:0; top:60px;} 100%{opacity:1; top:80px;} }
+
+/* 加载态 */
+.loading-overlay { position: fixed; inset: 0; z-index: 150; background: rgba(10,14,26,0.6); display: flex; align-items: center; justify-content: center; }
+.loading-overlay .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--cyan); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { 100%{transform:rotate(360deg);} }

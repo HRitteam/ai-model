@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大模型API费用监控系统</title>
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+</head>
+<body>
+  <!-- 全局网格背景 + 扫描线 -->
+  <div class="bg-grid"></div>
+  <div class="scanline"></div>
+
+  <!-- 顶部状态栏 -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">⚡</span>
+      <div class="brand-text">
+        <h1>大模型API费用监控系统</h1>
+        <p>MILITARY-GRADE AI COST RADAR · 实时监测 · 智能预警</p>
+      </div>
+    </div>
+    <div class="status-center">
+      <div class="sys-status" id="sysStatus">
+        <span class="status-dot" id="sysDot"></span>
+        <span id="sysStatusText">系统初始化中...</span>
+      </div>
+      <div class="collect-info">
+        <span>上次采集: <b id="lastCollect">--</b></span>
+        <span>下次采集: <b id="nextCollect">--</b></span>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="summary-chips" id="summaryChips">
+        <span class="chip chip-ok">正常 <b id="okCount">0</b></span>
+        <span class="chip chip-warn">预警 <b id="warnCount">0</b></span>
+        <span class="chip chip-danger">告警 <b id="dangerCount">0</b></span>
+      </div>
+      <button class="btn btn-cyan" id="btnCollect">⟳ 手动采集</button>
+      <button class="btn btn-outline" id="btnTestAlert">📡 测试告警</button>
+    </div>
+  </header>
+
+  <!-- 主区域：左六宫格 | 中央图表 | 右六宫格 -->
+  <main class="main-grid">
+    <section class="grid-col grid-left" id="gridLeft"></section>
+
+    <section class="center-panel">
+      <div class="panel radar-panel">
+        <div class="panel-header">
+          <span class="panel-title">◆ 平台余额雷达</span>
+          <span class="panel-sub">RADAR SCAN</span>
+        </div>
+        <div class="radar-wrap">
+          <canvas id="radarCanvas"></canvas>
+          <div class="radar-points" id="radarPoints"></div>
+        </div>
+      </div>
+      <div class="panel chart-panel">
+        <div class="panel-header">
+          <span class="panel-title">◆ 余额趋势分析</span>
+          <div class="tabs">
+            <button class="tab active" data-range="7d">近7日</button>
+            <button class="tab" data-range="30d">近30日</button>
+            <button class="tab" data-range="90d">近90日</button>
+          </div>
+        </div>
+        <div id="trendChart" class="chart-box"></div>
+      </div>
+    </section>
+
+    <section class="grid-col grid-right" id="gridRight"></section>
+  </main>
+
+  <!-- 底部告警日志滚动 -->
+  <footer class="alert-ticker">
+    <span class="ticker-label">⚠ 告警日志</span>
+    <div class="ticker-track" id="alertTicker"></div>
+  </footer>
+
+  <!-- 测试告警弹窗 -->
+  <div class="modal-mask" id="testModal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3>📡 测试告警通道</h3>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label>渠道</label>
+          <select id="testChannel">
+            <option value="all">邮件 + 短信</option>
+            <option value="email">仅邮件</option>
+            <option value="sms">仅短信</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>平台(可选)</label>
+          <select id="testPlatform">
+            <option value="">- 不指定 -</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="modalCancel">取消</button>
+        <button class="btn btn-cyan" id="modalSend">发送测试</button>
+      </div>
+      <div class="modal-result" id="modalResult" hidden></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/scan.js"></script>
+  <script src="/js/grid.js"></script>
+  <script src="/js/chart.js"></script>
+  <script src="/js/actions.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
