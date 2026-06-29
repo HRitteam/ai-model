@@ -41,6 +41,8 @@
         <span class="chip chip-danger">告警 <b id="dangerCount">0</b></span>
       </div>
       <button class="btn btn-cyan" id="btnCollect">⟳ 手动采集</button>
+      <button class="btn btn-outline" id="btnRecipients">👥 发送人管理</button>
+      <button class="btn btn-outline" id="btnSettings">⚙ 通知设置</button>
       <button class="btn btn-outline" id="btnTestAlert">📡 测试告警</button>
     </div>
   </header>
@@ -113,6 +115,73 @@
     </div>
   </div>
 
+  <!-- 发送人管理弹窗 -->
+  <div class="modal-mask" id="recipientsModal" hidden>
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <h3>👥 发送人管理</h3>
+        <button class="modal-close" id="recipientsClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="recipients-toolbar">
+          <span class="recipients-tip">姓名、手机号、邮箱均为必填</span>
+          <button class="btn btn-cyan btn-sm" id="btnAddRecipient">+ 新增发送人</button>
+        </div>
+        <div class="recipients-list" id="recipientsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增/编辑发送人弹窗 -->
+  <div class="modal-mask" id="recipientEditModal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="recipientEditTitle">新增发送人</h3>
+        <button class="modal-close" id="recipientEditClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row"><label>姓名 *</label><input type="text" id="rcName" placeholder="必填" class="form-input"></div>
+        <div class="form-row"><label>手机号 *</label><input type="text" id="rcPhone" placeholder="必填" class="form-input"></div>
+        <div class="form-row"><label>邮箱 *</label><input type="text" id="rcEmail" placeholder="必填" class="form-input"></div>
+        <div class="form-row"><label>备注</label><input type="text" id="rcRemark" placeholder="选填" class="form-input"></div>
+        <div class="form-row"><label>启用</label><label class="switch"><input type="checkbox" id="rcEnabled" checked><span class="slider"></span></label></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="recipientEditCancel">取消</button>
+        <button class="btn btn-cyan" id="recipientEditSave">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通知设置弹窗 -->
+  <div class="modal-mask" id="settingsModal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3>⚙ 通知设置</h3>
+        <button class="modal-close" id="settingsClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label>通知模式</label>
+          <select id="notifyMode" class="form-input">
+            <option value="single">单发 - 每个平台单独发送一封邮件</option>
+            <option value="merged">合并 - 所有平台汇总到一封邮件</option>
+            <option value="both">两者 - 单发 + 合并都发</option>
+          </select>
+        </div>
+        <div class="form-row"><label>黄色阈值</label><input type="number" id="setYellow" class="form-input"><span class="form-suffix">元</span></div>
+        <div class="form-row"><label>红色阈值</label><input type="number" id="setRed" class="form-input"><span class="form-suffix">元</span></div>
+        <div class="form-row"><label>红色重复</label><input type="number" id="setRedRepeat" class="form-input"><span class="form-suffix">小时</span></div>
+        <div class="form-row"><label>启用邮件</label><label class="switch"><input type="checkbox" id="setEmailEnabled" checked><span class="slider"></span></label></div>
+        <div class="form-row"><label>启用短信</label><label class="switch"><input type="checkbox" id="setSmsEnabled" checked><span class="slider"></span></label></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="settingsCancel">取消</button>
+        <button class="btn btn-cyan" id="settingsSave">保存</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div class="toast" id="toast" hidden></div>
 
@@ -121,6 +190,7 @@
   <script src="/js/grid.js"></script>
   <script src="/js/chart.js"></script>
   <script src="/js/actions.js"></script>
+  <script src="/js/recipients.js"></script>
   <script src="/js/app.js"></script>
 </body>
 </html>

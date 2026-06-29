@@ -26,6 +26,8 @@ const config = {
     redRepeatHours: parseInt(process.env.RED_REPEAT_HOURS || '6', 10),
     emailTo: (process.env.ALERT_EMAIL_TO || '').split(',').map(s => s.trim()).filter(Boolean),
     smsPhones: (process.env.ALERT_SMS_PHONES || '').split(',').map(s => s.trim()).filter(Boolean),
+    // 邮件通道提供商：aliyun | sendcloud
+    mailProvider: (process.env.ALERT_MAIL_PROVIDER || 'sendcloud').toLowerCase(),
   },
 
   dashboardUrl: process.env.DASHBOARD_URL || 'http://localhost:3000',
@@ -77,6 +79,16 @@ const config = {
     smsKey: process.env.SENDCLOUD_SMS_KEY || '',
     smsTemplateId: process.env.SENDCLOUD_SMS_TEMPLATE_ID || '',
     smsSign: process.env.SENDCLOUD_SMS_SIGN || 'AI费用监控',
+  },
+
+  // 阿里云 DirectMail 邮件通道
+  aliyunDm: {
+    accessKeyId: process.env.ALIYUN_DM_ACCESS_KEY_ID || '',
+    accessKeySecret: process.env.ALIYUN_DM_ACCESS_KEY_SECRET || '',
+    accountName: process.env.ALIYUN_DM_ACCOUNT_NAME || '',
+    fromAlias: process.env.ALIYUN_DM_FROM_ALIAS || 'AI费用监控',
+    region: process.env.ALIYUN_DM_REGION || 'cn-hangzhou',
+    endpoint: process.env.ALIYUN_DM_ENDPOINT || 'dm.aliyuncs.com',
   },
 };
 

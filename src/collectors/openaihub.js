@@ -4,7 +4,8 @@ const config = require('../config');
 
 // OpenAI-Hub 余额采集器：GET https://api.openai-hub.com/api/user/self
 // 认证：Authorization=<token>(不带Bearer) + New-Api-User=<userId>
-// 返回 data.quota(总额度) / data.used_quota(已用)，剩余 = quota - used_quota
+// 返回 data.quota(剩余余额原始值) / data.used_quota(历史累计消耗)
+// 注意：quota 本身就是"剩余可用额度"，不需要再减去 used_quota
 class OpenAIHubCollector extends BaseCollector {
   isConfigured() {
     return !!(config.openaihub.token && config.openaihub.userId);
@@ -23,14 +24,14 @@ class OpenAIHubCollector extends BaseCollector {
       throw new Error(`OpenAI-Hub 接口返回 HTTP ${resp.status}: ${JSON.stringify(resp.data).slice(0, 200)}`);
     }
     const d = resp.data.data || {};
-    const quota = Number(d.quota || 0);
+    // quota = 剩余余额（原始单位），直接使用，不扣减 used_quota
+    const remain = Number(d.quota || 0);
     const used = Number(d.used_quota || 0);
-    const remain = quota - used;
     const balance = this.applyDivisor(remain);
     return {
       balance,
-      currency: this.platform.currency || 'quota',
-      consumed: used,
+      currency: 'CNY',
+      consumed: this.applyDivisor(used),
       raw: resp.data,
     };
   }

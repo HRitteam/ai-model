@@ -4,9 +4,9 @@
   height: 64px;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 20px;
-  background: linear-gradient(180deg, rgba(0, 30, 50, 0.9), rgba(10, 14, 26, 0.9));
+  background: linear-gradient(180deg, rgba(13,17,23,0.98), rgba(10,14,20,0.95));
   border-bottom: 1px solid var(--border);
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
 }
 
 .main-grid {
@@ -19,14 +19,9 @@
   overflow: hidden;
 }
 
-.grid-col {
-  display: flex; flex-direction: column; gap: 14px;
-  overflow-y: auto; min-width: 0;
-}
+.grid-col { display: flex; flex-direction: column; gap: 14px; overflow-y: auto; min-width: 0; }
 
-.center-panel {
-  display: flex; flex-direction: column; gap: 14px; min-width: 0;
-}
+.center-panel { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .radar-panel { flex: 0 0 300px; }
 .chart-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
@@ -34,40 +29,41 @@
   position: relative; z-index: 3;
   height: 38px;
   display: flex; align-items: center;
-  background: rgba(0, 20, 35, 0.9);
+  background: var(--bg-elevated);
   border-top: 1px solid var(--border);
   overflow: hidden;
 }
 
-/* 面板通用 */
+/* 面板通用（磨砂玻璃） */
 .panel {
-  background: var(--bg-panel);
+  background: var(--bg-card);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 10px;
   display: flex; flex-direction: column;
   position: relative;
-  backdrop-filter: blur(4px);
+  box-shadow: var(--shadow-card);
 }
 .panel::before, .panel::after {
-  content: ''; position: absolute; width: 12px; height: 12px;
-  border: solid var(--cyan); border-width: 0;
+  content: ''; position: absolute; width: 10px; height: 10px;
+  border-color: transparent; border-style: solid; border-width: 0;
+  pointer-events: none;
 }
-.panel::before { top: -1px; left: -1px; border-top-width: 2px; border-left-width: 2px; }
-.panel::after { bottom: -1px; right: -1px; border-bottom-width: 2px; border-right-width: 2px; }
+.panel::before { top: -1px; left: -1px; border-top-width: 2px; border-left-width: 2px; border-top-color: var(--accent-blue); opacity: 0.35; border-left-color: var(--accent-blue); opacity: 0.35; }
+.panel::after { bottom: -1px; right: -1px; border-bottom-width: 2px; border-right-width: 2px; border-bottom-color: var(--accent-blue); opacity: 0.25; border-right-color: var(--accent-blue); opacity: 0.25; }
 
 .panel-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 14px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--border);
 }
-.panel-title { color: var(--cyan); font-size: 14px; letter-spacing: 1px; }
-.panel-sub { color: var(--text-muted); font-size: 11px; font-family: var(--font-mono); }
+.panel-title { color: var(--accent-blue); font-size: 14px; letter-spacing: 1px; font-weight: 600; }
+.panel-sub { color: var(--text-tertiary); font-size: 11px; font-family: var(--font-mono); letter-spacing: 0.5px; }
 
 .chart-box { flex: 1; min-height: 0; padding: 8px; }
 
-.radar-wrap {
-  flex: 1; position: relative; display: flex; align-items: center; justify-content: center;
-}
+.radar-wrap { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; }
 #radarCanvas { width: 100%; height: 100%; }
 .radar-points { position: absolute; inset: 0; pointer-events: none; }
 

@@ -18,6 +18,7 @@ const recordsRouter = require('./routes/records');
 const collectRouter = require('./routes/collect');
 const alertsRouter = require('./routes/alerts');
 const settingsRouter = require('./routes/settings');
+const recipientsRouter = require('./routes/recipients');
 const healthRouter = require('./routes/health');
 
 async function start() {
@@ -49,6 +50,7 @@ async function start() {
   app.use('/api/collect', collectRouter);
   app.use('/api/alerts', alertsRouter);
   app.use('/api/settings', settingsRouter);
+  app.use('/api/recipients', recipientsRouter);
   app.use('/api/health', healthRouter);
 
   // 静态资源

@@ -1,28 +1,64 @@
-/* ========== 军工雷达风格主题变量 ========== */
+/* ========== GitHub Dark 风格主题变量 ========== */
 :root {
-  --bg: #0a0e1a;
-  --bg-card: #0f1626;
-  --bg-panel: rgba(15, 22, 38, 0.88);
-  --cyan: #00d4ff;
-  --cyan-dim: rgba(0, 212, 255, 0.3);
-  --green: #00ff88;
-  --yellow: #ffcc00;
-  --red: #ff3366;
-  --text: #e0f7ff;
-  --text-dim: #7a8fa6;
-  --text-muted: #5a7a9a;
-  --border: rgba(0, 212, 255, 0.25);
-  --border-bright: rgba(0, 212, 255, 0.5);
-  --grid-line: rgba(0, 212, 255, 0.05);
+  /* 2.1 六层背景色 */
+  --bg-app: #0D1117;
+  --bg-sidebar: #0A0E14;
+  --bg-card: rgba(20, 25, 35, 0.85);
+  --bg-card-hover: rgba(30, 35, 50, 0.95);
+  --bg-elevated: #161B22;
+  --bg-focus-overlay: rgba(0, 0, 0, 0.6);
+
+  /* 2.2 语义化强调色 */
+  --accent-blue: #4A90D9;
+  --accent-blue-light: #6CB0F0;
+  --accent-green: #3FB950;
+  --accent-red: #FF4444;
+  --accent-yellow: #D4A843;
+  --accent-orange: #F0883E;
+  --accent-cyan: #39D2C0;
+
+  /* 兼容旧变量（平滑迁移） */
+  --cyan: var(--accent-blue-light);        /* 主操作/高亮 → 蓝色 */
+  --green: var(--accent-green);            /* 正常状态 */
+  --yellow: var(--accent-yellow);          /* 预警 */
+  --red: var(--accent-red);                /* 告警 */
+
+  /* 2.3 文字色阶 */
+  --text-primary: #E6EDF3;               /* 标题、主要内容 */
+  --text-secondary: #8B949E;              /* 次要说明 */
+  --text-tertiary: #555F6D;              /* 辅助提示 */
+  --text-link: #58A6FF;                  /* 链接 */
+  --text: var(--text-primary);
+  --text-dim: var(--text-secondary);
+  --text-muted: var(--text-tertiary);
+
+  /* 2.4 边框系统 */
+  --border-default: 1px solid rgba(255,255,255,0.08);
+  --border-hover: 1px solid rgba(255,255,255,0.2);
+  --border-selected: 2px solid var(--accent-blue);
+
+  /* 2.5 阴影与层级 */
+  --shadow-panel: 0 8px 32px rgba(0,0,0,0.4);
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.5);
+
+  /* 2.6 圆角系统 */
+  --radius-sm: 6px;
+
+  /* 扩展变量（网格/雷达） */
+  --grid-line: rgba(74, 144, 217, 0.06);
+  --border: rgba(74, 144, 217, 0.15);
+  --border-bright: rgba(74, 144, 217, 0.35);
+
   --font-mono: 'Share Tech Mono', 'Consolas', 'Courier New', monospace;
-  --font-sans: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', sans-serif;
+  --font-sans: 'Microsoft YaHei', 'PingFang SC', -apple-system, 'Helvetica Neue', sans-serif;
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--bg-app);
+  color: var(--text-primary);
   font-family: var(--font-sans);
-  overflow: hidden;
+  overflow-x: hidden;
   min-height: 100vh;
 }
 
@@ -40,10 +76,10 @@ body {
   100% { background-position: 42px 42px; }
 }
 
-/* 扫描线 */
+/* 扫描线（蓝色系） */
 .scanline {
   position: fixed; left: 0; right: 0; height: 140px; z-index: 1; pointer-events: none;
-  background: linear-gradient(180deg, transparent 0%, rgba(0, 212, 255, 0.06) 45%, rgba(0, 212, 255, 0.1) 50%, rgba(0, 212, 255, 0.06) 55%, transparent 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(74, 144, 217, 0.04) 45%, rgba(74, 144, 217, 0.08) 50%, rgba(74, 144, 217, 0.04) 55%, transparent 100%);
   animation: scan 7s linear infinite;
 }
 @keyframes scan {

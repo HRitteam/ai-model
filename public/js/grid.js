@@ -42,7 +42,7 @@ function buildCard(p) {
   }
   card.innerHTML = `
     <div class="card-head">
-      <div class="card-name"><span class="picon">${H.iconOf(p.code)}</span>${p.name}</div>
+      <div class="card-name"><img class="picon-img" src="${H.iconUrl(p.code)}" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"/><span class="picon-fallback" style="display:none">${H.iconOf(p.code)}</span>${p.name}</div>
       ${statusBadgeHtml(p)}
     </div>
     <div class="card-balance">

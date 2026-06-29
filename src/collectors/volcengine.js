@@ -2,7 +2,7 @@ const { BaseCollector } = require('./base');
 const http = require('../utils/http');
 const config = require('../config');
 const { CredentialMissingError } = require('../utils/errors');
-const { hmacSha256Hex, sha256Hex } = require('../utils/crypto');
+const { hmacSha256Hex, hmacSha256Buf, sha256Hex } = require('../utils/crypto');
 
 // 火山引擎余额采集器：QueryBalanceAcct（手动实现 V4 签名）
 const HOST = 'open.volcengineapi.com';
@@ -56,11 +56,11 @@ class VolcEngineCollector extends BaseCollector {
     const credentialScope = `${shortDate}/${region}/${SERVICE}/request`;
     const stringToSign = ['HMAC-SHA256', xDate, credentialScope, sha256Hex(canonicalRequest)].join('\n');
 
-    // 6. 派生签名密钥 + 签名
-    const kDate = hmacSha256Hex(sk, shortDate);
-    const kRegion = hmacSha256Hex(kDate, region);
-    const kService = hmacSha256Hex(kRegion, SERVICE);
-    const kSigning = hmacSha256Hex(kService, 'request');
+    // 6. 派生签名密钥 + 签名（每步用 Buffer 作为 key，不能用 hex 字符串）
+    const kDate = hmacSha256Buf(sk, shortDate);
+    const kRegion = hmacSha256Buf(kDate, region);
+    const kService = hmacSha256Buf(kRegion, SERVICE);
+    const kSigning = hmacSha256Buf(kService, 'request');
     const signature = hmacSha256Hex(kSigning, stringToSign);
 
     const authorization = `HMAC-SHA256 Credential=${ak}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;

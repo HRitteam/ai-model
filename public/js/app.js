@@ -40,7 +40,7 @@ function updateSysStatus(s) {
 function renderTicker(alerts) {
   const el = document.getElementById('alertTicker');
   if (!alerts || !alerts.length) {
-    el.innerHTML = '<span class="ticker-item" style="color:#5a7a9a">○ 暂无告警记录，系统运行平稳</span>';
+    el.innerHTML = '<span class="ticker-item" style="color:#555F6D">○ 暂无告警记录，系统运行平稳</span>';
     return;
   }
   const buildItem = a => {

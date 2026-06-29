@@ -23,6 +23,10 @@ const API = {
   settings: () => API.get('/api/settings'),
   updateSettings: (kv) => API.put('/api/settings', kv),
   health: () => API.get('/api/health'),
+  recipients: (all) => API.get('/api/recipients' + (all ? '?all=true' : '')),
+  addRecipient: (r) => API.post('/api/recipients', r),
+  updateRecipient: (id, r) => API.put('/api/recipients/' + id, r),
+  delRecipient: (id) => API._req('/api/recipients/' + id, { method: 'DELETE' }),
 };
 
 // 通用 helpers（全局）
@@ -37,11 +41,23 @@ window.H = {
     if (isNaN(d)) return String(s);
     return d.toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false });
   },
-  iconOf(code) {
+  // 平台图标 URL（使用各平台公开 logo / favicon）
+  iconUrl(code) {
+    const icons = {
+      deepseek:   'https://deepseek.com/favicon.ico',
+      kimi:       'https://kimi.moonshot.cn/favicon.ico',
+      volc:       'https://lf3-static.bytedance.com/obj/open-platform-ops/fe_volcengine_logo/favicon.ico',
+      openaihub:  'https://openai-hub.com/static/img/logo.svg',
+      zhipu:      'https://cdn.bigmodel.cn/static/platform/images/modelcenter/base-model-logo.svg',
+      minimax:    'https://platform.minimaxi.com/favicon.ico',
+    };
+    return icons[code] || '';
+  },
+  iconOf(code) { // 兼容旧调用
     const m = { deepseek: 'DS', kimi: 'KM', volc: 'VL', openaihub: 'OH', zhipu: 'ZP', minimax: 'MM' };
     return m[code] || (code || '').slice(0, 2).toUpperCase();
   },
   levelColor(level) {
-    return { normal: '#00ff88', yellow: '#ffcc00', red: '#ff3366', unknown: '#7a8fa6' }[level] || '#00d4ff';
+    return { normal: '#3FB950', yellow: '#D4A843', red: '#FF4444', unknown: '#555F6D' }[level] || '#4A90D9';
   },
 };

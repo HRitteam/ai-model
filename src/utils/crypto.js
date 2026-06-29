@@ -8,6 +8,11 @@ function hmacSha256Hex(key, data) {
   return crypto.createHmac('sha256', key).update(data, 'utf8').digest('hex');
 }
 
+// 返回 Buffer 的 HMAC-SHA256（用于 V4 签名派生密钥，每步输出需作为下一步 key 原样使用）
+function hmacSha256Buf(key, data) {
+  return crypto.createHmac('sha256', key).update(data, 'utf8').digest();
+}
+
 function sha256Hex(data) {
   return crypto.createHash('sha256').update(data, 'utf8').digest('hex');
 }
@@ -26,4 +31,4 @@ function getJsonPath(obj, pathStr) {
   return cur;
 }
 
-module.exports = { md5, hmacSha256Hex, sha256Hex, getJsonPath };
+module.exports = { md5, hmacSha256Hex, hmacSha256Buf, sha256Hex, getJsonPath };

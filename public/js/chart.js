@@ -15,7 +15,7 @@ function renderTrend(rows) {
     if (!groups[r.code]) groups[r.code] = { name: r.name, data: [] };
     groups[r.code].data.push([r.collected_at, parseFloat(r.balance)]);
   }
-  const palette = ['#00d4ff', '#00ff88', '#ffcc00', '#ff3366', '#a78bfa', '#fb923c'];
+  const palette = ['#4A90D9', '#3FB950', '#D4A843', '#FF4444', '#F0883E', '#39D2C0'];
   const series = Object.values(groups).map((g, i) => ({
     name: g.name,
     type: 'line',
@@ -31,22 +31,22 @@ function renderTrend(rows) {
     color: palette,
     tooltip: {
       trigger: 'axis',
-      backgroundColor: 'rgba(15,22,38,0.95)',
-      borderColor: '#00d4ff',
-      textStyle: { color: '#e0f7ff' },
+      backgroundColor: 'rgba(22,27,34,0.95)',
+      borderColor: 'rgba(74,144,217,0.4)',
+      textStyle: { color: '#E6EDF3' },
     },
-    legend: { textStyle: { color: '#7a8fa6', fontSize: 11 }, top: 2, type: 'scroll' },
+    legend: { textStyle: { color: '#8B949E', fontSize: 11 }, top: 2, type: 'scroll' },
     grid: { left: 52, right: 18, top: 32, bottom: 28 },
     xAxis: {
       type: 'time',
-      axisLine: { lineStyle: { color: '#1a3a5c' } },
-      axisLabel: { color: '#5a7a9a', fontSize: 10 },
+      axisLine: { lineStyle: { color: 'rgba(74,144,217,0.2)' } },
+      axisLabel: { color: '#555F6D', fontSize: 10 },
     },
     yAxis: {
       type: 'value',
-      axisLine: { lineStyle: { color: '#1a3a5c' } },
-      axisLabel: { color: '#5a7a9a', fontSize: 10 },
-      splitLine: { lineStyle: { color: 'rgba(0,212,255,0.06)' } },
+      axisLine: { lineStyle: { color: 'rgba(74,144,217,0.2)' } },
+      axisLabel: { color: '#555F6D', fontSize: 10 },
+      splitLine: { lineStyle: { color: 'rgba(74,144,217,0.06)' } },
     },
     series,
   }, true);
@@ -68,8 +68,9 @@ function updateRadar(platforms) {
     return {
       angle,
       dist: window.radarScan.r * distRatio,
+      level: p.level,                      /* 供 scan.js 按状态着色 */
       color: H.levelColor(p.level),
-      name: H.iconOf(p.code),
+      name: p.name || H.iconOf(p.code),
     };
   });
   window.radarScan.setPoints(pts);
