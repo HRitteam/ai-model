@@ -60,10 +60,10 @@ function updateRadar(platforms) {
     const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
     let distRatio;
     if (p.balance == null || !p.is_configured) {
-      distRatio = 0.25;
+      distRatio = 0.22;
     } else {
       const ref = (p.yellow_threshold || 500) * 2.5;
-      distRatio = Math.min(1, Math.max(0.18, p.balance / ref));
+      distRatio = Math.min(0.84, Math.max(0.2, p.balance / ref));
     }
     return {
       angle,

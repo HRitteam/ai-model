@@ -28,14 +28,17 @@ class RadarScan {
   resize() {
     const dpr = window.devicePixelRatio || 1;
     const rect = this.canvas.getBoundingClientRect();
-    this.canvas.width = rect.width * dpr;
-    this.canvas.height = rect.height * dpr;
+    const size = Math.max(180, Math.min(rect.width, rect.height));
+    const labelPadding = size >= 360 ? 46 : size >= 280 ? 38 : 28;
+
+    this.canvas.width = size * dpr;
+    this.canvas.height = size * dpr;
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    this.w = rect.width;
-    this.h = rect.height;
+    this.w = size;
+    this.h = size;
     this.cx = this.w / 2;
     this.cy = this.h / 2;
-    this.r = Math.max(20, Math.min(this.w, this.h) / 2 - 14);
+    this.r = Math.max(20, size / 2 - labelPadding);
   }
 
   setPoints(points) { this.points = points || []; }
@@ -132,7 +135,10 @@ class RadarScan {
       // 标签
       ctx.fillStyle = RADAR_COLORS.labelColor;
       ctx.font = '10px "Microsoft YaHei", "PingFang SC", sans-serif';
-      ctx.fillText(p.name, x + 10, y + 4);
+      const labelOffsetX = x >= this.cx ? 10 : -46;
+      const labelX = Math.max(8, Math.min(this.w - 56, x + labelOffsetX));
+      const labelY = Math.max(14, Math.min(this.h - 8, y + 4));
+      ctx.fillText(p.name, labelX, labelY);
     }
   }
 }
