@@ -4,6 +4,7 @@ node_modules/
 logs/
 .DS_Store
 .vscode/
+.vs/
 .idea/
 preview.png
 demo-seed.js

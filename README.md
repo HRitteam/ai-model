@@ -116,18 +116,25 @@ MINIMAX_COOKIE=xxx
 MINIMAX_BALANCE_URL=https://platform.minimaxi.com/api/xxx
 MINIMAX_BALANCE_FIELD=data.balance
 
-# SendCloud
-SENDCLOUD_API_USER=xxx
-SENDCLOUD_API_KEY=xxx
-SENDCLOUD_FROM_EMAIL=monitor@yourdomain.com
-SENDCLOUD_MAIL_TEMPLATE=model_api_balance_warning
+# 阿里云 DirectMail
+ALIYUN_DM_ACCESS_KEY_ID=xxx
+ALIYUN_DM_ACCESS_KEY_SECRET=xxx
+ALIYUN_DM_ACCOUNT_NAME=no-reply@alerts.hrflag.cn
+ALIYUN_DM_FROM_ALIAS=HRflag
+
+# SendCloud 短信
 SENDCLOUD_SMS_USER=xxx
 SENDCLOUD_SMS_KEY=xxx
-SENDCLOUD_SMS_TEMPLATE_ID=xxx
+SENDCLOUD_SMS_TEMPLATE_ID=940146
 
 # 告警接收人
 ALERT_EMAIL_TO=a@x.com,b@y.com
 ALERT_SMS_PHONES=13800000000,13900000000
+
+# 站点与品牌
+DASHBOARD_URL=https://aimodel.hrflag.com
+BRAND_NAME=HRflag
+APP_NAME=AI费用监控
 ```
 
 ### 3. 初始化数据库

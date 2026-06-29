@@ -8,7 +8,6 @@ async function loadDashboard() {
     dashboardData = data;
     renderGrid(data.platforms);
     renderSummary(data.summary);
-    renderTicker(data.alerts_recent);
     updateRadar(data.platforms);
     updateSysStatus(data.summary);
   } catch (e) {
@@ -35,23 +34,6 @@ function updateSysStatus(s) {
   else { cls = 'dot-normal'; text = '系统运行正常'; }
   dot.className = 'status-dot ' + cls;
   txt.textContent = text;
-}
-
-function renderTicker(alerts) {
-  const el = document.getElementById('alertTicker');
-  if (!alerts || !alerts.length) {
-    el.innerHTML = '<span class="ticker-item" style="color:#555F6D">○ 暂无告警记录，系统运行平稳</span>';
-    return;
-  }
-  const buildItem = a => {
-    const cls = a.alert_level === 'red' ? 't-red' : 't-yellow';
-    const ch = a.channel === 'email' ? '📧' : '📱';
-    const pname = a.name || ('#' + a.platform_id);
-    const tag = a.is_test ? '[测试]' : (a.alert_level === 'red' ? '[红色]' : '[黄色]');
-    return `<span class="ticker-item"><span class="t-time">${H.fmtTime(a.sent_at)}</span><span class="${cls}">${tag}</span> ${pname} 余额${H.formatNum(a.balance)} ${ch} ${a.status === 'success' ? '✓' : '✗'}</span>`;
-  };
-  const items = alerts.map(buildItem).join('');
-  el.innerHTML = items + items; // 复制一份实现无缝滚动
 }
 
 // 趋势 tab 切换

@@ -4,8 +4,8 @@ const PLATFORM_META = [
   { code: 'kimi',      name: 'Kimi',       collectType: 'api',    icon: 'KM' },
   { code: 'volc',      name: '火山引擎',    collectType: 'sdk',    icon: 'VL' },
   { code: 'openaihub', name: 'OpenAI-Hub', collectType: 'api',    icon: 'OH' },
-  { code: 'zhipu',     name: '智谱AI',      collectType: 'cookie', icon: 'ZP' },
-  { code: 'minimax',   name: 'MiniMax',    collectType: 'cookie', icon: 'MM' },
+  { code: 'zhipu',     name: '智谱AI',      collectType: 'manual', icon: 'ZP', balanceUrl: 'https://open.bigmodel.cn/finance-center/finance/overview' },
+  { code: 'minimax',   name: 'MiniMax',    collectType: 'manual', icon: 'MM', balanceUrl: 'https://platform.minimaxi.com/console/recharge-records' },
 ];
 
 const META_BY_CODE = PLATFORM_META.reduce((m, p) => { m[p.code] = p; return m; }, {});

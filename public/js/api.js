@@ -19,7 +19,8 @@ const API = {
   trend: (range) => API.get(`/api/records?range=${range || '7d'}`),
   collect: () => API.post('/api/collect'),
   alerts: (params) => API.get('/api/alerts' + (params ? ('?' + new URLSearchParams(params)) : '')),
-  testAlert: (channel, platform) => API.post('/api/alerts/test', { channel, platform }),
+  sendNotification: (channel, platform) => API.post('/api/alerts/send', { channel, platform }),
+  testAlert: (channel, platform) => API.post('/api/alerts/send', { channel, platform }),
   settings: () => API.get('/api/settings'),
   updateSettings: (kv) => API.put('/api/settings', kv),
   health: () => API.get('/api/health'),
@@ -46,12 +47,19 @@ window.H = {
     const icons = {
       deepseek:   'https://deepseek.com/favicon.ico',
       kimi:       'https://kimi.moonshot.cn/favicon.ico',
-      volc:       'https://lf3-static.bytedance.com/obj/open-platform-ops/fe_volcengine_logo/favicon.ico',
-      openaihub:  'https://openai-hub.com/static/img/logo.svg',
+      volc:       'http://res.volccdn.com/obj/volc-console-fe/images/favicon.52bcaa41.png',
+      openaihub:  'https://www.openai-hub.com/logo.webp',
       zhipu:      'https://cdn.bigmodel.cn/static/platform/images/modelcenter/base-model-logo.svg',
       minimax:    'https://platform.minimaxi.com/favicon.ico',
     };
     return icons[code] || '';
+  },
+  balanceUrl(code) {
+    const urls = {
+      zhipu: 'https://open.bigmodel.cn/finance-center/finance/overview',
+      minimax: 'https://platform.minimaxi.com/console/recharge-records',
+    };
+    return urls[code] || '';
   },
   iconOf(code) { // 兼容旧调用
     const m = { deepseek: 'DS', kimi: 'KM', volc: 'VL', openaihub: 'OH', zhipu: 'ZP', minimax: 'MM' };

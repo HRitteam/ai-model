@@ -4,15 +4,23 @@ const config = require('../config');
 const { CredentialMissingError, CookieExpiredError } = require('../utils/errors');
 const { getJsonPath } = require('../utils/crypto');
 const { UA } = require('./genericCookie');
+const { isUsageEstimateConfigured, collectUsageEstimate } = require('./usageEstimate');
 
 // 智谱AI 采集器：优先 Cookie 抓包现金余额，备选 Coding Plan 配额百分比
 class ZhipuCollector extends BaseCollector {
   isConfigured() {
-    return !!((config.zhipu.balanceUrl && config.zhipu.cookie) || config.zhipu.token);
+    return !!(
+      isUsageEstimateConfigured(config.zhipu.estimate) ||
+      (config.zhipu.balanceUrl && config.zhipu.cookie) ||
+      config.zhipu.token
+    );
   }
 
   async collect() {
     this.ensureConfigured();
+    if (isUsageEstimateConfigured(config.zhipu.estimate)) {
+      return collectUsageEstimate(this.platform, config.zhipu.estimate);
+    }
     if (config.zhipu.balanceUrl && config.zhipu.cookie) return this._byCookie();
     if (config.zhipu.token) return this._byQuota();
     throw new CredentialMissingError('zhipu');

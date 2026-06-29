@@ -1,6 +1,7 @@
 const { pool } = require('../db/pool');
 const config = require('../config');
 const { createCollector } = require('../collectors/registry');
+const { META_BY_CODE } = require('../config/platforms');
 
 function levelOf(balance, yellowTh, redTh) {
   if (balance == null) return 'unknown';
@@ -9,39 +10,58 @@ function levelOf(balance, yellowTh, redTh) {
   return 'red';
 }
 
-// 近似计算下次采集时间（支持 "m */n * * *" 形式）
+// 近似计算下次采集时间，支持 "0 * * * *" 与 "m */n * * *" 两种小时级表达式
 function computeNextCollect(cronExpr) {
-  const m = String(cronExpr).match(/^\d+\s+\*\/(\d+)\s+\*\s+\*\s+\*$/);
-  if (!m) return null;
-  const n = parseInt(m[1]);
+  const expr = String(cronExpr || '').trim();
+  const hourly = expr.match(/^(\d+)\s+\*\s+\*\s+\*\s+\*$/);
+  const everyNHours = expr.match(/^(\d+)\s+\*\/(\d+)\s+\*\s+\*\s+\*$/);
+  if (!hourly && !everyNHours) return null;
+
   const now = new Date();
   const next = new Date(now);
-  next.setMinutes(0, 0, 0);
+
+  if (hourly) {
+    const minute = parseInt(hourly[1], 10);
+    next.setSeconds(0, 0);
+    next.setMinutes(minute, 0, 0);
+    if (next <= now) next.setHours(next.getHours() + 1);
+    return next;
+  }
+
+  const minute = parseInt(everyNHours[1], 10);
+  const n = parseInt(everyNHours[2], 10);
+  next.setMinutes(minute, 0, 0);
   next.setHours(Math.floor(now.getHours() / n) * n + n);
   if (next <= now) next.setHours(next.getHours() + n);
   return next;
 }
 
 async function getDashboard() {
-  const [platforms] = await pool.query("SELECT * FROM platforms WHERE status=1 ORDER BY display_order");
-  const [sets] = await pool.query("SELECT * FROM settings");
+  const [platforms] = await pool.query('SELECT * FROM platforms WHERE status=1 ORDER BY display_order');
+  const [sets] = await pool.query('SELECT * FROM settings');
   const settings = {};
   for (const s of sets) settings[s.key] = s.value;
   const gYellow = parseFloat(settings.yellow_threshold || 500);
   const gRed = parseFloat(settings.red_threshold || 200);
 
   const platformList = [];
-  let okCount = 0, warnCount = 0, dangerCount = 0, unconfigCount = 0;
+  let okCount = 0;
+  let warnCount = 0;
+  let dangerCount = 0;
+  let unconfigCount = 0;
   let lastCollectAt = null;
 
   for (const p of platforms) {
+    const meta = META_BY_CODE[p.code] || {};
     const yellowTh = p.yellow_threshold != null ? parseFloat(p.yellow_threshold) : gYellow;
     const redTh = p.red_threshold != null ? parseFloat(p.red_threshold) : gRed;
     const balance = p.last_balance != null ? parseFloat(p.last_balance) : null;
     const level = levelOf(balance, yellowTh, redTh);
 
-    if (p.last_status === 'unconfigured' || p.last_status === 'cookie_expired') unconfigCount++;
-    else if (p.last_status === 'ok') {
+    const isManualQueryOnly = meta.collectType === 'manual';
+    if (!isManualQueryOnly && (p.last_status === 'unconfigured' || p.last_status === 'cookie_expired')) {
+      unconfigCount++;
+    } else if (p.last_status === 'ok') {
       if (level === 'normal') okCount++;
       else if (level === 'yellow') warnCount++;
       else if (level === 'red') dangerCount++;
@@ -51,10 +71,11 @@ async function getDashboard() {
       lastCollectAt = p.last_collected_at;
     }
 
-    const [trend] = await pool.query(
-      "SELECT balance, collected_at FROM balance_records WHERE platform_id=? AND status='ok' AND collected_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) ORDER BY collected_at",
+    const [trendRows] = await pool.query(
+      "SELECT balance, collected_at FROM balance_records WHERE platform_id=? AND status='ok' ORDER BY collected_at DESC LIMIT 7",
       [p.id]
     );
+    const trend = trendRows.slice().reverse();
 
     const collector = createCollector(p);
     const isConfigured = collector ? collector.isConfigured() : false;
@@ -70,6 +91,8 @@ async function getDashboard() {
       last_collected_at: p.last_collected_at,
       last_error: p.last_error,
       is_configured: isConfigured,
+      collect_type: meta.collectType || p.collect_type,
+      balance_query_url: meta.balanceUrl || '',
       yellow_threshold: yellowTh,
       red_threshold: redTh,
       trend7d: trend,
@@ -77,7 +100,7 @@ async function getDashboard() {
   }
 
   const [alertsRecent] = await pool.query(
-    "SELECT a.id, a.platform_id, a.alert_level, a.threshold, a.balance, a.channel, a.status, a.is_test, a.error_msg, a.sent_at, p.code, p.name FROM alert_log a LEFT JOIN platforms p ON a.platform_id=p.id ORDER BY a.sent_at DESC LIMIT 10"
+    'SELECT a.id, a.platform_id, a.alert_level, a.threshold, a.balance, a.channel, a.status, a.is_test, a.error_msg, a.sent_at, p.code, p.name FROM alert_log a LEFT JOIN platforms p ON a.platform_id=p.id ORDER BY a.sent_at DESC LIMIT 10'
   );
 
   const cronExpr = settings.collect_cron || config.collect.cron;
@@ -97,7 +120,7 @@ async function getDashboard() {
     settings: {
       yellow_threshold: gYellow,
       red_threshold: gRed,
-      red_repeat_hours: parseInt(settings.red_repeat_hours || 6),
+      red_repeat_hours: parseInt(settings.red_repeat_hours || 6, 10),
       collect_cron: cronExpr,
     },
   };

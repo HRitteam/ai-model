@@ -21,8 +21,8 @@ INSERT INTO alert_state (platform_id, current_level)
 INSERT INTO settings (`key`, value, value_type, description) VALUES
   ('yellow_threshold',     '500',                'number', '全局黄色阈值(元)'),
   ('red_threshold',        '200',                'number', '全局红色阈值(元)'),
-  ('collect_interval_hours','6',                 'number', '采集间隔(小时)'),
-  ('collect_cron',         '0 */6 * * *',        'string', 'cron 表达式'),
+  ('collect_interval_hours','1',                 'number', '采集间隔(小时)'),
+  ('collect_cron',         '0 * * * *',        'string', 'cron 表达式'),
   ('alert_email_enabled',  'true',               'bool',   '启用邮件告警'),
   ('alert_sms_enabled',    'true',               'bool',   '启用短信告警'),
   ('alert_email_to',       '',                   'string', '告警收件邮箱(逗号分隔,已弃用,改用 recipients 表)'),

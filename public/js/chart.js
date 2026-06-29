@@ -35,8 +35,8 @@ function renderTrend(rows) {
       borderColor: 'rgba(74,144,217,0.4)',
       textStyle: { color: '#E6EDF3' },
     },
-    legend: { textStyle: { color: '#8B949E', fontSize: 11 }, top: 2, type: 'scroll' },
-    grid: { left: 52, right: 18, top: 32, bottom: 28 },
+    legend: { textStyle: { color: '#8B949E', fontSize: 11 }, top: 0, type: 'scroll' },
+    grid: { left: 44, right: 12, top: 28, bottom: 18 },
     xAxis: {
       type: 'time',
       axisLine: { lineStyle: { color: 'rgba(74,144,217,0.2)' } },

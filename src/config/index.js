@@ -5,6 +5,8 @@ const config = {
   env: process.env.NODE_ENV || 'development',
   port: parseInt(process.env.PORT || '3000', 10),
   logLevel: process.env.LOG_LEVEL || 'info',
+  brandName: process.env.BRAND_NAME || 'HRflag',
+  appName: process.env.APP_NAME || 'AI费用监控',
 
   db: {
     host: process.env.MYSQL_HOST || '127.0.0.1',
@@ -16,7 +18,7 @@ const config = {
   },
 
   collect: {
-    cron: process.env.COLLECT_CRON || '0 */6 * * *',
+    cron: process.env.COLLECT_CRON || '0 * * * *',
     timeoutMs: parseInt(process.env.COLLECT_TIMEOUT_MS || '15000', 10),
   },
 
@@ -26,11 +28,9 @@ const config = {
     redRepeatHours: parseInt(process.env.RED_REPEAT_HOURS || '6', 10),
     emailTo: (process.env.ALERT_EMAIL_TO || '').split(',').map(s => s.trim()).filter(Boolean),
     smsPhones: (process.env.ALERT_SMS_PHONES || '').split(',').map(s => s.trim()).filter(Boolean),
-    // 邮件通道提供商：aliyun | sendcloud
-    mailProvider: (process.env.ALERT_MAIL_PROVIDER || 'sendcloud').toLowerCase(),
   },
 
-  dashboardUrl: process.env.DASHBOARD_URL || 'http://localhost:3000',
+  dashboardUrl: process.env.DASHBOARD_URL || 'https://aimodel.hrflag.com',
   recordRetentionDays: parseInt(process.env.RECORD_RETENTION_DAYS || '90', 10),
 
   // 平台凭证
@@ -60,6 +60,26 @@ const config = {
     extraHeaders: process.env.ZHIPU_EXTRA_HEADERS || '',
     token: process.env.ZHIPU_TOKEN || '',
     quotaUrl: process.env.ZHIPU_QUOTA_URL || 'https://open.bigmodel.cn/api/monitor/usage/quota/limit',
+    estimate: {
+      enabled: process.env.ZHIPU_ESTIMATE_ENABLED === 'true',
+      usageUrl: process.env.ZHIPU_USAGE_URL || '',
+      method: process.env.ZHIPU_USAGE_METHOD || 'GET',
+      authType: process.env.ZHIPU_USAGE_AUTH_TYPE || 'none',
+      authHeader: process.env.ZHIPU_USAGE_AUTH_HEADER || '',
+      authToken: process.env.ZHIPU_USAGE_AUTH_TOKEN || '',
+      authCookie: process.env.ZHIPU_USAGE_AUTH_COOKIE || '',
+      extraHeaders: process.env.ZHIPU_USAGE_EXTRA_HEADERS || '',
+      body: process.env.ZHIPU_USAGE_BODY || '',
+      totalBudget: process.env.ZHIPU_TOTAL_BUDGET || '',
+      currency: process.env.ZHIPU_ESTIMATE_CURRENCY || 'CNY',
+      consumedField: process.env.ZHIPU_CONSUMED_FIELD || '',
+      itemsField: process.env.ZHIPU_USAGE_ITEMS_FIELD || '',
+      modelField: process.env.ZHIPU_USAGE_MODEL_FIELD || '',
+      inputTokensField: process.env.ZHIPU_INPUT_TOKENS_FIELD || '',
+      outputTokensField: process.env.ZHIPU_OUTPUT_TOKENS_FIELD || '',
+      cachedInputTokensField: process.env.ZHIPU_CACHED_INPUT_TOKENS_FIELD || '',
+      priceRules: process.env.ZHIPU_PRICE_RULES || '',
+    },
   },
   minimax: {
     cookie: process.env.MINIMAX_COOKIE || '',
@@ -67,17 +87,32 @@ const config = {
     balanceField: process.env.MINIMAX_BALANCE_FIELD || 'data.balance',
     currencyField: process.env.MINIMAX_CURRENCY_FIELD || '',
     extraHeaders: process.env.MINIMAX_EXTRA_HEADERS || '',
+    estimate: {
+      enabled: process.env.MINIMAX_ESTIMATE_ENABLED === 'true',
+      usageUrl: process.env.MINIMAX_USAGE_URL || '',
+      method: process.env.MINIMAX_USAGE_METHOD || 'GET',
+      authType: process.env.MINIMAX_USAGE_AUTH_TYPE || 'none',
+      authHeader: process.env.MINIMAX_USAGE_AUTH_HEADER || '',
+      authToken: process.env.MINIMAX_USAGE_AUTH_TOKEN || '',
+      authCookie: process.env.MINIMAX_USAGE_AUTH_COOKIE || '',
+      extraHeaders: process.env.MINIMAX_USAGE_EXTRA_HEADERS || '',
+      body: process.env.MINIMAX_USAGE_BODY || '',
+      totalBudget: process.env.MINIMAX_TOTAL_BUDGET || '',
+      currency: process.env.MINIMAX_ESTIMATE_CURRENCY || 'CNY',
+      consumedField: process.env.MINIMAX_CONSUMED_FIELD || '',
+      itemsField: process.env.MINIMAX_USAGE_ITEMS_FIELD || '',
+      modelField: process.env.MINIMAX_USAGE_MODEL_FIELD || '',
+      inputTokensField: process.env.MINIMAX_INPUT_TOKENS_FIELD || '',
+      outputTokensField: process.env.MINIMAX_OUTPUT_TOKENS_FIELD || '',
+      cachedInputTokensField: process.env.MINIMAX_CACHED_INPUT_TOKENS_FIELD || '',
+      priceRules: process.env.MINIMAX_PRICE_RULES || '',
+    },
   },
 
   sendcloud: {
-    apiUser: process.env.SENDCLOUD_API_USER || '',
-    apiKey: process.env.SENDCLOUD_API_KEY || '',
-    fromEmail: process.env.SENDCLOUD_FROM_EMAIL || '',
-    fromName: process.env.SENDCLOUD_FROM_NAME || 'AI费用监控',
-    mailTemplate: process.env.SENDCLOUD_MAIL_TEMPLATE || 'model_api_balance_warning',
     smsUser: process.env.SENDCLOUD_SMS_USER || '',
     smsKey: process.env.SENDCLOUD_SMS_KEY || '',
-    smsTemplateId: process.env.SENDCLOUD_SMS_TEMPLATE_ID || '',
+    smsTemplateId: process.env.SENDCLOUD_SMS_TEMPLATE_ID || '940146',
     smsSign: process.env.SENDCLOUD_SMS_SIGN || 'AI费用监控',
   },
 
