@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大模型API费用监控系统</title>
+  <link rel="icon" type="image/svg+xml" href="https://static.hrflag.com/HRicon/%E6%97%97%E5%B8%9C.svg">
+  <link rel="shortcut icon" href="https://static.hrflag.com/HRicon/%E6%97%97%E5%B8%9C.svg">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="js/cloudbase.full.js"></script>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="scanline"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">⚡</span>
+      <div class="brand-text">
+        <h1>大模型API费用监控系统</h1>
+        <p>MILITARY-GRADE AI COST RADAR · 实时监测 · 智能预警</p>
+      </div>
+    </div>
+    <div class="status-center">
+      <div class="sys-status" id="sysStatus">
+        <span class="status-dot" id="sysDot"></span>
+        <span id="sysStatusText">系统初始化中...</span>
+      </div>
+      <div class="collect-info">
+        <span>上次采集: <b id="lastCollect">--</b></span>
+        <span>下次采集: <b id="nextCollect">--</b></span>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="summary-chips" id="summaryChips">
+        <span class="chip chip-ok">正常 <b id="okCount">0</b></span>
+        <span class="chip chip-warn">预警 <b id="warnCount">0</b></span>
+        <span class="chip chip-danger">告警 <b id="dangerCount">0</b></span>
+      </div>
+      <button class="btn btn-cyan" id="btnCollect">手动采集</button>
+      <button class="btn btn-outline" id="btnRecipients">发送人管理</button>
+      <button class="btn btn-outline" id="btnSettings">通知设置</button>
+      <button class="btn btn-outline" id="btnTestAlert">发送通知</button>
+    </div>
+  </header>
+
+  <main class="main-grid">
+    <section class="grid-col grid-left" id="gridLeft"></section>
+
+    <section class="center-panel">
+      <div class="panel radar-panel">
+        <div class="panel-header">
+          <span class="panel-title">● 平台余额雷达</span>
+          <span class="panel-sub">RADAR SCAN</span>
+        </div>
+        <div class="radar-wrap">
+          <canvas id="radarCanvas"></canvas>
+          <div class="radar-points" id="radarPoints"></div>
+        </div>
+      </div>
+      <div class="panel chart-panel">
+        <div class="panel-header">
+          <span class="panel-title">● 余额趋势分析</span>
+          <div class="tabs">
+            <button class="tab active" data-range="7d">近7日</button>
+            <button class="tab" data-range="30d">近30日</button>
+            <button class="tab" data-range="90d">近90日</button>
+          </div>
+        </div>
+        <div id="trendChart" class="chart-box"></div>
+      </div>
+    </section>
+
+    <section class="grid-col grid-right" id="gridRight"></section>
+  </main>
+
+  <div class="modal-mask" id="testModal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3>发送通知</h3>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label>渠道</label>
+          <select id="testChannel">
+            <option value="all">邮件 + 短信</option>
+            <option value="email">仅邮件</option>
+            <option value="sms">仅短信</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>平台</label>
+          <select id="testPlatform">
+            <option value="">- 请选择 -</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="modalCancel">取消</button>
+        <button class="btn btn-cyan" id="modalSend">发送通知</button>
+      </div>
+      <div class="modal-result" id="modalResult" hidden></div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="recipientsModal" hidden>
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <h3>发送人管理</h3>
+        <button class="modal-close" id="recipientsClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="recipients-toolbar">
+          <span class="recipients-tip">姓名、手机号、邮箱均为必填</span>
+          <button class="btn btn-cyan btn-sm" id="btnAddRecipient">+ 新增发送人</button>
+        </div>
+        <div class="recipients-list" id="recipientsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="recipientEditModal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="recipientEditTitle">新增发送人</h3>
+        <button class="modal-close" id="recipientEditClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row"><label>姓名 *</label><input type="text" id="rcName" placeholder="必填" class="form-input"></div>
+        <div class="form-row"><label>手机号 *</label><input type="text" id="rcPhone" placeholder="必填" class="form-input"></div>
+        <div class="form-row"><label>邮箱 *</label><input type="text" id="rcEmail" placeholder="必填" class="form-input"></div>
+        <div class="form-row"><label>备注</label><input type="text" id="rcRemark" placeholder="选填" class="form-input"></div>
+        <div class="form-row"><label>启用</label><label class="switch"><input type="checkbox" id="rcEnabled" checked><span class="slider"></span></label></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="recipientEditCancel">取消</button>
+        <button class="btn btn-cyan" id="recipientEditSave">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask modal-mask-lite" id="settingsModal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3>通知设置</h3>
+        <button class="modal-close" id="settingsClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label>通知模式</label>
+          <select id="notifyMode" class="form-input">
+            <option value="single">单发 - 每个平台单独发送一封邮件</option>
+            <option value="merged">合并 - 所有平台汇总到一封邮件</option>
+            <option value="both">两者 - 单发 + 合并都发</option>
+          </select>
+        </div>
+        <div class="form-row"><label>黄色阈值</label><input type="number" id="setYellow" class="form-input"><span class="form-suffix">元</span></div>
+        <div class="form-row"><label>红色阈值</label><input type="number" id="setRed" class="form-input"><span class="form-suffix">元</span></div>
+        <div class="form-row"><label>红色重复</label><input type="number" id="setRedRepeat" class="form-input"><span class="form-suffix">小时</span></div>
+        <div class="form-row"><label>启用邮件</label><label class="switch"><input type="checkbox" id="setEmailEnabled" checked><span class="slider"></span></label></div>
+        <div class="form-row"><label>启用短信</label><label class="switch"><input type="checkbox" id="setSmsEnabled" checked><span class="slider"></span></label></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="settingsCancel">取消</button>
+        <button class="btn btn-cyan" id="settingsSave">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="js/api.js?v=202606302010"></script>
+  <script src="js/scan.js?v=202606302010"></script>
+  <script src="js/grid.js?v=202606302010"></script>
+  <script src="js/chart.js?v=202606302010"></script>
+  <script src="js/actions.js?v=202606302010"></script>
+  <script src="js/recipients.js?v=202606302010"></script>
+  <script src="js/app.js?v=202606302010"></script>
+</body>
+</html>

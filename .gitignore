@@ -10,3 +10,6 @@ preview.png
 demo-seed.js
 shot.js
 .workbuddy/
+cloudbaserc.json
+tmp-*.json
+check-users.js

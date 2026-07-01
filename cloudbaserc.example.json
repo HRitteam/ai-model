@@ -1,0 +1,46 @@
+{
+  "envId": "your-cloudbase-env-id",
+  "version": "1.0.0",
+  "functionRoot": "cloud-function",
+  "functions": [
+    {
+      "name": "ai-cost-monitor-api",
+      "timeout": 30,
+      "runtime": "Nodejs18.15",
+      "memorySize": 512,
+      "handler": "index.main",
+      "envVariables": {
+        "NODE_ENV": "production",
+        "TCB_ENV": "your-cloudbase-env-id",
+        "TCB_SECRET_ID": "your-tencent-cloud-secret-id",
+        "TCB_SECRET_KEY": "your-tencent-cloud-secret-key",
+        "DEEPSEEK_API_KEY": "",
+        "MOONSHOT_API_KEY": "",
+        "VOLC_AK": "",
+        "VOLC_SK": "",
+        "OPENAIHUB_BASE_URL": "https://api.openai-hub.com",
+        "OPENAIHUB_TOKEN": "",
+        "OPENAIHUB_USER_ID": "",
+        "ALIYUN_DM_ACCESS_KEY_ID": "",
+        "ALIYUN_DM_ACCESS_KEY_SECRET": "",
+        "ALIYUN_DM_ACCOUNT_NAME": "",
+        "ALIYUN_DM_FROM_ALIAS": "HRflag",
+        "ALIYUN_DM_REGION": "cn-hangzhou",
+        "ALIYUN_DM_ENDPOINT": "dm.aliyuncs.com",
+        "SENDCLOUD_SMS_USER": "",
+        "SENDCLOUD_SMS_KEY": "",
+        "SENDCLOUD_SMS_TEMPLATE_ID": "940146",
+        "SENDCLOUD_SMS_SIGN": "AI Cost Monitor",
+        "YELLOW_THRESHOLD": "500",
+        "RED_THRESHOLD": "200",
+        "RED_REPEAT_HOURS": "6",
+        "COLLECT_CRON": "0 * * * *",
+        "COLLECT_TIMEOUT_MS": "15000",
+        "DASHBOARD_URL": "https://your-domain.example.com",
+        "BRAND_NAME": "HRflag",
+        "APP_NAME": "AI Cost Monitor",
+        "RECORD_RETENTION_DAYS": "90"
+      }
+    }
+  ]
+}
