@@ -8,6 +8,28 @@ function initTrendChart() {
   window.addEventListener('resize', () => trendChart && trendChart.resize());
 }
 
+function compactTrendPoints(points, maxPoints = 24) {
+  if (points.length <= maxPoints) return points;
+
+  const sorted = points.slice().sort((a, b) => new Date(a[0]) - new Date(b[0]));
+  const bucketSize = Math.ceil(sorted.length / maxPoints);
+  const compacted = [sorted[0]];
+
+  for (let i = 1; i < sorted.length - 1; i += bucketSize) {
+    const bucket = sorted.slice(i, Math.min(i + bucketSize, sorted.length - 1));
+    if (!bucket.length) continue;
+    const previous = compacted[compacted.length - 1][1];
+    const representative = bucket.reduce((best, point) => {
+      return Math.abs(point[1] - previous) > Math.abs(best[1] - previous) ? point : best;
+    }, bucket[bucket.length - 1]);
+    compacted.push(representative);
+  }
+
+  const last = sorted[sorted.length - 1];
+  if (compacted[compacted.length - 1][0] !== last[0]) compacted.push(last);
+  return compacted;
+}
+
 function renderTrend(rows) {
   if (!trendChart || !rows) return;
   const groups = {};
@@ -20,11 +42,18 @@ function renderTrend(rows) {
     name: g.name,
     type: 'line',
     smooth: true,
+    showSymbol: false,
     symbol: 'circle',
-    symbolSize: 4,
-    data: g.data.sort((a, b) => new Date(a[0]) - new Date(b[0])),
+    symbolSize: 7,
+    sampling: 'lttb',
+    data: compactTrendPoints(g.data),
     lineStyle: { color: palette[i % palette.length], width: 2 },
     itemStyle: { color: palette[i % palette.length] },
+    emphasis: {
+      focus: 'series',
+      lineStyle: { width: 3 },
+      itemStyle: { color: palette[i % palette.length] },
+    },
   }));
   trendChart.setOption({
     backgroundColor: 'transparent',

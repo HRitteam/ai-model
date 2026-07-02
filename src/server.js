@@ -34,7 +34,10 @@ async function start() {
 
   const app = express();
 
-  app.use(helmet({ contentSecurityPolicy: false }));
+  app.use(helmet({
+    contentSecurityPolicy: false,
+    frameguard: false,
+  }));
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
